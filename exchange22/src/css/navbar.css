@@ -1,0 +1,43 @@
+.navbar {
+  position: fixed; /* Fixes the navbar at the top */
+  top: 0; /* Ensures it stays at the top */
+  left: 0; /* Aligns to the left edge */
+  width: 100%; /* Makes it span the full width */
+  background-color: #1e3a8a; /* Blue-600 */
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Ensures it stays above other content */
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-title {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.navbar-links a {
+  color: white;
+  margin-right: 2rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.navbar-links a:hover {
+  color: #d1d5db; /* Gray-300 */
+}
+
+.navbar-links svg {
+  margin-right: 8px; /* Adds space between the icon and the text */
+  font-size: 20px; /* Adjust the size of the icons */
+}
+
+/* Add margin to body content so it doesn't hide behind the fixed navbar */
+body {
+  padding-top: 60px; /* Adjust based on navbar height */
+}

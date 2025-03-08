@@ -1,0 +1,139 @@
+/* Player Card */
+.player-card {
+  width: 16rem;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.player-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Player Info */
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-placeholder {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.name-role {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: #111827;
+}
+
+.role {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Transaction Info */
+.transaction-info {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.transaction-item {
+  text-align: center;
+}
+
+.transaction-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.transaction-value {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Action Buttons */
+.action-buttons {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.buy-button {
+  padding: 0.6rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  background-color: #14b8a6;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.buy-button:hover {
+  background-color: #0d9488;
+}
+
+.sell-button {
+  padding: 0.6rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  background-color: #f59e0b;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.sell-button:hover {
+  background-color: #d97706;
+}
+
+/* Team Badge as Button */
+.team-code {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.team-code-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  background-color: #2563eb; /* Blue color */
+  border-radius: 0.5rem;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.team-code-badge:hover {
+  background-color: #1e3a8a; /* Darker Blue */
+}

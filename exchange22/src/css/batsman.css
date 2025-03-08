@@ -1,0 +1,60 @@
+/* General container styling */
+.predict-batsman-container {
+  padding: 16px;
+}
+
+/* Heading styles */
+.predict-batsman-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+/* Table styles */
+.predict-batsman-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #d1d5db;
+  margin-bottom: 24px;
+}
+
+/* Table header */
+.predict-batsman-table thead {
+  background-color: #e5e7eb;
+}
+
+.predict-batsman-table th,
+.predict-batsman-table td {
+  border: 1px solid #d1d5db;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Conditional styling for Buy Success % */
+.buy-success {
+  font-weight: bold;
+  color: gray;
+}
+
+.buy-success.high {
+  color: green;
+}
+
+/* Conditional styling for Sell Accuracy % */
+.sell-accuracy {
+  font-weight: bold;
+  color: gray;
+}
+
+.sell-accuracy.high {
+  color: red;
+}
+
+/* Team-Specific Colors */
+.team1 {
+  border: 3px solid #0056b3;
+}
+
+.team2 {
+  border: 3px solid #b32d00;
+}

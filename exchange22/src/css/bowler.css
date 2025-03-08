@@ -1,0 +1,51 @@
+/* General container styling */
+.predict-bowler-container {
+  padding: 16px;
+}
+
+/* Heading styles */
+.predict-bowler-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+/* Table styles */
+.predict-bowler-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #d1d5db;
+  margin-bottom: 24px;
+}
+
+/* Table header */
+.predict-bowler-table thead {
+  background-color: #e5e7eb;
+}
+
+.predict-bowler-table th,
+.predict-bowler-table td {
+  border: 1px solid #d1d5db;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Conditional styling for Buy Success % */
+.buy-success {
+  font-weight: bold;
+  color: gray;
+}
+
+.buy-success.high {
+  color: green;
+}
+
+/* Conditional styling for Sell Accuracy % */
+.sell-accuracy {
+  font-weight: bold;
+  color: gray;
+}
+
+.sell-accuracy.high {
+  color: red;
+}

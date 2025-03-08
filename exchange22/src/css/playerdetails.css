@@ -1,0 +1,135 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 450px;
+  font-family: Arial, sans-serif;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+.card-item span {
+  font-weight: bold;
+  color: #444;
+}
+.player-card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+  background: #f9f9f9;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  width: 240px;
+  text-align: center;
+}
+
+.edit-card {
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 220px;
+}
+
+.row-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.input-group {
+  width: 48%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+.edit-card label {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 3px;
+  text-align: left;
+}
+
+.edit-card input {
+  width: 100%;
+  padding: 6px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  padding: 6px 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.edit-btn {
+  background: #007bff;
+  color: white;
+}
+
+.save-btn {
+  background: #28a745;
+  color: white;
+}
+
+.cancel-btn {
+  background: #dc3545;
+  color: white;
+}
+
+/* Team-Specific Colors */
+.team1 {
+  border: 2px solid #0056b3;
+}
+
+.team2 {
+  border: 2px solid #b32d00;
+}
