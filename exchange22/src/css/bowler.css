@@ -5,17 +5,20 @@
 
 /* Heading styles */
 .predict-bowler-title {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 16px;
+  text-align: center;
+  color: #333;
 }
 
 /* Table styles */
 .predict-bowler-table {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid #d1d5db;
+  border: 1px solid #d1d5db; /* Ensuring consistent border color */
   margin-bottom: 24px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Table header */
@@ -25,9 +28,25 @@
 
 .predict-bowler-table th,
 .predict-bowler-table td {
-  border: 1px solid #d1d5db;
-  padding: 10px;
+  border: 1px solid #d1d5db; /* Consistent border */
+  padding: 12px;
   text-align: center;
+  font-size: 1rem;
+}
+
+/* Alternating row colors for better readability */
+.predict-bowler-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.predict-bowler-table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+/* Hover effect for rows */
+.predict-bowler-table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.07);
+  transition: background 0.3s ease-in-out;
 }
 
 /* Conditional styling for Buy Success % */
@@ -38,6 +57,7 @@
 
 .buy-success.high {
   color: green;
+  font-size: 1.1rem;
 }
 
 /* Conditional styling for Sell Accuracy % */
@@ -48,4 +68,52 @@
 
 .sell-accuracy.high {
   color: red;
+  font-size: 1.1rem;
+}
+
+/* Team-Specific Colors */
+.team1 {
+  border: 3px solid #0056b3; /* Ensuring thick consistent border */
+  background: rgba(0, 86, 179, 0.1);
+}
+
+.team2 {
+  border: 3px solid #b32d00; /* Ensuring thick consistent border */
+  background: rgba(179, 45, 0, 0.1);
+}
+
+/* Best BUY Player - Green Highlight */
+.best-buy {
+  background: linear-gradient(
+    90deg,
+    rgba(50, 205, 50, 0.9),
+    rgba(0, 255, 0, 0.9)
+  );
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  box-shadow: 0px 4px 6px rgba(50, 205, 50, 0.5);
+  transition: transform 0.2s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 1 !important;
+}
+
+/* Best SELL Player - Red Highlight */
+.best-sell {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.9),
+    rgba(255, 99, 71, 0.9)
+  );
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  box-shadow: 0px 4px 6px rgba(255, 69, 0, 0.5);
+  transition: transform 0.2s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 1 !important;
+}
+
+/* Ensure row border is visible */
+.best-buy td,
+.best-sell td {
+  border: 2px solid white !important;
 }

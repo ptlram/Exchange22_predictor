@@ -77,7 +77,7 @@ app.get("/api/data", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
+//scrap data from cricbuzz
 app.get("/cricket", async (req, res) => {
   try {
     const response = await axios.get(url);
@@ -196,11 +196,15 @@ app.get("/cricket", async (req, res) => {
           const $ = cheerio.load(profileResponse.data);
           let role = $(".cb-col.cb-col-60.cb-lst-itm-sm").eq(2).text().trim();
 
-          if (/Allrounder|All-rounder|all-rounder/i.test(role))
-            role = "allrounder";
-          else if (/Bowler/i.test(role)) role = "bowler";
-          else if (/Batsman|WK-Batsman/i.test(role)) role = "batsman";
-          else role = "N/A";
+          if (/Allrounder|All-rounder|all-rounder/i.test(role)) {
+            role = role; // Keep as it is
+          } else if (/Bowler/i.test(role)) {
+            role = "bowler";
+          } else if (/Batsman|WK-Batsman/i.test(role)) {
+            role = "batsman";
+          } else {
+            role = "N/A";
+          }
 
           return { name: player.name, role };
         } catch (error) {
@@ -315,7 +319,7 @@ app.get("/cricket", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch data" });
   }
 });
-
+//retrive data as per category format
 app.post("/matchcatformat", async (req, res) => {
   try {
     // Ensure correct request body parsing
@@ -344,7 +348,7 @@ app.post("/matchcatformat", async (req, res) => {
       .json({ error: "Internal Server Error", details: error.message });
   }
 });
-
+//batting
 app.post("/insertUnmatchedBatting", async (req, res) => {
   const { category, format, unmatchedPlayers } = req.body;
 
@@ -383,7 +387,6 @@ app.post("/insertUnmatchedBatting", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 app.put("/updateMatchedBatting", async (req, res) => {
   try {
     const { matchedPlayers } = req.body;
@@ -414,11 +417,20 @@ app.put("/updateMatchedBatting", async (req, res) => {
       const newwicket = `${oldwicket},0`;
       const neweconomy = `${oldeconomy},0`;
       const team = `${player.team}`;
+      const role = `${player.role}`;
 
       // Update the database
       await conn.query(
-        "UPDATE player SET runs = $1, strikerate = $2 ,wicket=$3,economy=$4,team=$5 WHERE player_id = $6",
-        [newRuns, newStrikeRate, newwicket, neweconomy, team, player.player_id]
+        "UPDATE player SET runs = $1, strikerate = $2 ,wicket=$3,economy=$4,team=$5 ,role=$6 WHERE player_id = $7",
+        [
+          newRuns,
+          newStrikeRate,
+          newwicket,
+          neweconomy,
+          team,
+          role,
+          player.player_id,
+        ]
       );
     }
 
@@ -428,7 +440,7 @@ app.put("/updateMatchedBatting", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
+//bowling
 app.post("/insertUnmatchedBowling", async (req, res) => {
   const { category, format, unmatchedPlayers } = req.body;
 
@@ -467,7 +479,6 @@ app.post("/insertUnmatchedBowling", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 app.put("/updateMatchedBowling", async (req, res) => {
   try {
     const { matchedPlayers } = req.body;
@@ -498,11 +509,20 @@ app.put("/updateMatchedBowling", async (req, res) => {
       const newWickets = `${oldWickets},${player.wicket}`;
       const newEconomy = `${oldEconomy},${player.economy}`;
       const team = `${player.team}`;
+      const role = `${player.role}`;
 
       // Update the database
       await conn.query(
-        "UPDATE player SET runs = $1, strikerate = $2 ,wicket=$3,economy=$4,team=$5 WHERE player_id = $6",
-        [newruns, newStrikeRate, newWickets, newEconomy, team, player.player_id]
+        "UPDATE player SET runs = $1, strikerate = $2 ,wicket=$3,economy=$4,team=$5 ,role=$6 WHERE player_id = $7",
+        [
+          newruns,
+          newStrikeRate,
+          newWickets,
+          newEconomy,
+          team,
+          role,
+          player.player_id,
+        ]
       );
     }
 
@@ -512,7 +532,7 @@ app.put("/updateMatchedBowling", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
+//batting and bowling
 app.post("/insertUnmatchedBatting_Bowling", async (req, res) => {
   const { category, format, unmatchedPlayers } = req.body;
 
@@ -581,11 +601,20 @@ app.put("/updateMatchedBatting_Bowling", async (req, res) => {
       const newWickets = `${oldWickets},${player.wicket}`;
       const newEconomy = `${oldEconomy},${player.economy}`;
       const team = `${player.team}`;
+      const role = `${player.role}`;
 
       // Update the database
       await conn.query(
-        "UPDATE player SET runs = $1, strikerate = $2, wicket = $3, economy = $4,team=$5 WHERE player_id = $6",
-        [newRuns, newStrikeRate, newWickets, newEconomy, team, player.player_id]
+        "UPDATE player SET runs = $1, strikerate = $2, wicket = $3, economy = $4,team=$5,role=$6 WHERE player_id = $7",
+        [
+          newRuns,
+          newStrikeRate,
+          newWickets,
+          newEconomy,
+          team,
+          role,
+          player.player_id,
+        ]
       );
     }
 
@@ -597,7 +626,7 @@ app.put("/updateMatchedBatting_Bowling", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
+//add player data individually
 app.post("/players", (req, res) => {
   const {
     player_name,

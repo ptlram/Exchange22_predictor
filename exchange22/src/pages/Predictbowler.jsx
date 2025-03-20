@@ -9,6 +9,7 @@ const Predictbowler = () => {
   const format = useSelector((state) => state.master.format);
   const team1 = useSelector((state) => state.master.team1);
   const team2 = useSelector((state) => state.master.team2);
+
   useEffect(() => {
     getDetails();
   }, []);
@@ -23,78 +24,81 @@ const Predictbowler = () => {
     }
   };
 
+  // Function to calculate points for a bowler
+  const calculatePoints = (player) => {
+    let points = 0;
+
+    // Wickets: 20 points per wicket
+    if (player.wicket) {
+      const wickets = player.wicket.split(",").map(Number);
+      points += wickets.reduce((a, b) => a + b, 0) * 20;
+    }
+
+    // Economy Bonus: Economy rate < 6 gets 5 points
+    if (player.economy) {
+      const economies = player.economy.split(",").map(Number);
+      const avgEconomy =
+        economies.reduce((a, b) => a + b, 0) / economies.length;
+      if (avgEconomy < 6) {
+        points += 5;
+      }
+    }
+
+    return points;
+  };
+
+  // Function to calculate accuracy for buy and sell
+  const calculateAccuracy = (player, points) => {
+    const buy = player.buy ? Number(player.buy) : 0;
+    const sell = player.sell ? Number(player.sell) : 0;
+    if (buy <= 0 || sell <= 0) return { buyAccuracy: 0, sellAccuracy: 0 };
+
+    const maxBuyEarnings = buy * 2;
+    const maxSellThreshold = sell * 2;
+
+    const buyAccuracy = ((points / maxBuyEarnings) * 100).toFixed(2);
+    const sellAccuracy = (
+      ((maxSellThreshold - points) / maxSellThreshold) *
+      100
+    ).toFixed(2);
+
+    return { buyAccuracy, sellAccuracy };
+  };
+
+  // Function to calculate overall bowler performance
   const calculatePerformance = (players) => {
-    const bowlers = [];
-    let bestEconomy = Infinity;
+    const bowlers = players
+      .filter((player) => player.role === "bowler")
+      .map((player) => {
+        const points = calculatePoints(player);
+        const { buyAccuracy, sellAccuracy } = calculateAccuracy(player, points);
 
-    players.forEach((data) => {
-      if (data.role === "bowler") {
-        const economies = data.economy
-          ? data.economy.split(",").map(Number)
-          : [];
-        if (economies.length > 0) {
-          const avgEconomy =
-            economies.reduce((a, b) => a + b, 0) / economies.length;
-          bestEconomy = Math.min(bestEconomy, avgEconomy);
-        }
-      }
-    });
+        return {
+          name: player.player_name,
+          category: player.category,
+          format: player.format,
+          team: player.team,
+          points,
+          buyAccuracy,
+          sellAccuracy,
+          isBestBuy: false,
+          isBestSell: false,
+        };
+      });
 
-    players.forEach((data) => {
-      if (data.role === "bowler") {
-        const wickets = data.wicket ? data.wicket.split(",").map(Number) : [];
-        const economies = data.economy
-          ? data.economy.split(",").map(Number)
-          : [];
-        const buy = data.buy ? Number(data.buy) : 0;
-        const sell = data.sell ? Number(data.sell) : 0;
+    if (bowlers.length > 0) {
+      let bestBuy = bowlers.reduce((max, player) =>
+        player.buyAccuracy > max.buyAccuracy ? player : max
+      );
+      let bestSell = bowlers.reduce((max, player) =>
+        player.sellAccuracy > max.sellAccuracy ? player : max
+      );
 
-        if (wickets.length > 0 && economies.length > 0 && buy > 0 && sell > 0) {
-          const maxBuyEarnings = buy * 2;
-          const maxSellThreshold = sell * 2;
-
-          const avgEconomy =
-            economies.reduce((a, b) => a + b, 0) / economies.length;
-
-          // Economy impact (Only 10% weight)
-          const economyImpact = (bestEconomy / avgEconomy) * 10;
-
-          // Calculate points for each match
-          const wicketPoints = wickets.map((w) =>
-            w >= 3 ? w * 20 + 5 : w * 20
-          );
-
-          // Calculate BUY Success % for each match
-          const buySuccessPercentages = wicketPoints.map(
-            (points) => ((points + economyImpact) / maxBuyEarnings) * 100
-          );
-          const avgBuySuccess =
-            buySuccessPercentages.reduce((acc, val) => acc + val, 0) /
-            buySuccessPercentages.length;
-
-          // Calculate SELL Accuracy % for each match
-          const sellAccuracyPercentages = wicketPoints.map(
-            (points) =>
-              ((maxSellThreshold - (points + economyImpact)) /
-                maxSellThreshold) *
-              100
-          );
-          const avgSellAccuracy =
-            sellAccuracyPercentages.reduce((acc, val) => acc + val, 0) /
-            sellAccuracyPercentages.length;
-
-          bowlers.push({
-            name: data.player_name,
-            category: data.category,
-            format: data.format,
-            team: data.team,
-            buySuccess: avgBuySuccess.toFixed(2),
-            sellAccuracy: avgSellAccuracy.toFixed(2),
-            avgEconomy: avgEconomy.toFixed(2),
-          });
-        }
-      }
-    });
+      bowlers.forEach((player) => {
+        if (player.name === bestBuy.name) player.isBestBuy = true;
+        if (player.name === bestSell.name) player.isBestSell = true;
+      });
+    }
 
     setBowlerPerformance(bowlers);
   };
@@ -102,50 +106,38 @@ const Predictbowler = () => {
   return (
     <div className="predict-bowler-container">
       <Navbar />
+
       <h2 className="predict-bowler-title">Bowler Performance Analysis</h2>
       <table className="predict-bowler-table">
         <thead>
           <tr>
             <th>Player</th>
-            <th>BUY Success %</th>
+            <th>Points</th>
+            <th>BUY Accuracy %</th>
             <th>SELL Accuracy %</th>
           </tr>
         </thead>
         <tbody>
-          {bowlerPerformance.map((player, index) => (
-            <tr
-              key={index}
-              className={`${
-                team1 === player.team
-                  ? "team1"
-                  : team2 === player.team
-                  ? "team2"
-                  : ""
-              }`}
-            >
-              {category === player.category &&
+          {bowlerPerformance
+            .filter(
+              (player) =>
+                category === player.category &&
                 format === player.format &&
-                (team1 === player.team || team2 === player.team) && (
-                  <>
-                    <td>{player.name}</td>
-                    <td
-                      className={`buy-success ${
-                        player.buySuccess >= 60 ? "high" : ""
-                      }`}
-                    >
-                      {player.buySuccess}%
-                    </td>
-                    <td
-                      className={`sell-accuracy ${
-                        player.sellAccuracy >= 60 ? "high" : ""
-                      }`}
-                    >
-                      {player.sellAccuracy}%
-                    </td>
-                  </>
-                )}
-            </tr>
-          ))}
+                (team1 === player.team || team2 === player.team)
+            )
+            .map((player, index) => (
+              <tr
+                key={index}
+                className={`${player.isBestBuy ? "best-buy" : ""} ${
+                  player.isBestSell ? "best-sell" : ""
+                }`}
+              >
+                <td>{player.name}</td>
+                <td>{player.points}</td>
+                <td>{player.buyAccuracy ? `${player.buyAccuracy}%` : "-"}</td>
+                <td>{player.sellAccuracy ? `${player.sellAccuracy}%` : "-"}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

@@ -128,6 +128,7 @@ function Scraper() {
           player_id: match.find((m) => m.player_name === player.name)
             ?.player_id,
           team: player.team,
+          role: player.role,
           run: player.run,
           strikerate: player.strikerate,
         }));
@@ -144,6 +145,7 @@ function Scraper() {
             ?.player_id,
           name: player.name,
           team: player.team,
+          role: player.role,
           wicket: player.wicket,
           economy: player.economy,
         }));
@@ -160,6 +162,7 @@ function Scraper() {
             ?.player_id,
           team: player.team,
           run: player.run,
+          role: player.role,
           strikerate: player.strikerate,
           wicket: player.wicket,
           economy: player.economy,
