@@ -266,26 +266,40 @@ app.get("/cricket", async (req, res) => {
         allPlayers.delete(playerName);
       }
     });
+
     allPlayers.forEach((player) => {
-      let battedInInning1 = inningsData.inning_1.batting.some(
+      let battedInInning1 = inningsData.inning_1.batting.find(
         (b) => b.name === player.name
       );
-      let bowledInInning2 = inningsData.inning_2.bowling.some(
-        (b) => b.name === player.name
-      );
-
-      let bowledInInning1 = inningsData.inning_1.bowling.some(
-        (b) => b.name === player.name
-      );
-      let battedInInning2 = inningsData.inning_2.batting.some(
+      let bowledInInning2 = inningsData.inning_2.bowling.find(
         (b) => b.name === player.name
       );
 
-      // Move to batting_bowling if they satisfy either condition
-      if (
-        (battedInInning1 && bowledInInning2) ||
-        (bowledInInning1 && battedInInning2)
-      ) {
+      let bowledInInning1 = inningsData.inning_1.bowling.find(
+        (b) => b.name === player.name
+      );
+      let battedInInning2 = inningsData.inning_2.batting.find(
+        (b) => b.name === player.name
+      );
+
+      // Merge batting and bowling stats if player appears in both innings
+      if (battedInInning1 || battedInInning2) {
+        player.run = battedInInning1?.run || battedInInning2?.run || "0";
+        player.strikerate =
+          battedInInning1?.strikerate || battedInInning2?.strikerate || "0.00";
+        player.isBatsman = true;
+      }
+
+      if (bowledInInning1 || bowledInInning2) {
+        player.wicket =
+          bowledInInning1?.wicket || bowledInInning2?.wicket || "0";
+        player.economy =
+          bowledInInning1?.economy || bowledInInning2?.economy || "0.00";
+        player.isBowler = true;
+      }
+
+      // Categorize correctly
+      if (player.isBatsman && player.isBowler) {
         batting_bowling.push(player);
       } else if (player.isBatsman) {
         batting.push(player);
@@ -293,6 +307,7 @@ app.get("/cricket", async (req, res) => {
         bowling.push(player);
       }
     });
+
     // res.json({ inningsData });
     res.json({ batting_bowling, batting, bowling });
   } catch (error) {
@@ -380,7 +395,7 @@ app.put("/updateMatchedBatting", async (req, res) => {
     for (const player of matchedPlayers) {
       // Fetch the old values
       const oldData = await conn.query(
-        "SELECT runs, strikerate ,wicket,economy FROM player WHERE player_id = $1",
+        "SELECT runs, strikerate ,wicket,economy,team FROM player WHERE player_id = $1",
         [player.player_id]
       );
 
@@ -394,16 +409,16 @@ app.put("/updateMatchedBatting", async (req, res) => {
       const oldwicket = oldData.rows[0].wicket || "0";
       const oldeconomy = oldData.rows[0].economy || "0";
 
-      // Sum the new values with the existing ones
       const newRuns = `${oldRuns},${player.run}`;
-      const newStrikeRate = `${oldStrikeRate},${player.strikerate}`; // Average strike rate
+      const newStrikeRate = `${oldStrikeRate},${player.strikerate}`;
       const newwicket = `${oldwicket},0`;
-      const neweconomy = `${oldeconomy},0`; // Average strike rate
+      const neweconomy = `${oldeconomy},0`;
+      const team = `${player.team}`;
 
       // Update the database
       await conn.query(
-        "UPDATE player SET runs = $1, strikerate = $2 ,wicket=$3,economy=$4 WHERE player_id = $5",
-        [newRuns, newStrikeRate, newwicket, neweconomy, player.player_id]
+        "UPDATE player SET runs = $1, strikerate = $2 ,wicket=$3,economy=$4,team=$5 WHERE player_id = $6",
+        [newRuns, newStrikeRate, newwicket, neweconomy, team, player.player_id]
       );
     }
 
@@ -482,11 +497,12 @@ app.put("/updateMatchedBowling", async (req, res) => {
       const newruns = `${oldruns},0`;
       const newWickets = `${oldWickets},${player.wicket}`;
       const newEconomy = `${oldEconomy},${player.economy}`;
+      const team = `${player.team}`;
 
       // Update the database
       await conn.query(
-        "UPDATE player SET runs = $1, strikerate = $2 ,wicket=$3,economy=$4 WHERE player_id = $5",
-        [newruns, newStrikeRate, newWickets, newEconomy, player.player_id]
+        "UPDATE player SET runs = $1, strikerate = $2 ,wicket=$3,economy=$4,team=$5 WHERE player_id = $6",
+        [newruns, newStrikeRate, newWickets, newEconomy, team, player.player_id]
       );
     }
 
@@ -564,11 +580,12 @@ app.put("/updateMatchedBatting_Bowling", async (req, res) => {
       const newStrikeRate = `${oldStrikeRate},${player.strikerate}`;
       const newWickets = `${oldWickets},${player.wicket}`;
       const newEconomy = `${oldEconomy},${player.economy}`;
+      const team = `${player.team}`;
 
       // Update the database
       await conn.query(
-        "UPDATE player SET runs = $1, strikerate = $2, wicket = $3, economy = $4 WHERE player_id = $5",
-        [newRuns, newStrikeRate, newWickets, newEconomy, player.player_id]
+        "UPDATE player SET runs = $1, strikerate = $2, wicket = $3, economy = $4,team=$5 WHERE player_id = $6",
+        [newRuns, newStrikeRate, newWickets, newEconomy, team, player.player_id]
       );
     }
 

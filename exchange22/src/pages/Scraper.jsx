@@ -127,6 +127,7 @@ function Scraper() {
         .map((player) => ({
           player_id: match.find((m) => m.player_name === player.name)
             ?.player_id,
+          team: player.team,
           run: player.run,
           strikerate: player.strikerate,
         }));
@@ -142,6 +143,7 @@ function Scraper() {
           player_id: match.find((m) => m.player_name === player.name)
             ?.player_id,
           name: player.name,
+          team: player.team,
           wicket: player.wicket,
           economy: player.economy,
         }));
@@ -156,6 +158,7 @@ function Scraper() {
         .map((player) => ({
           player_id: match.find((m) => m.player_name === player.name)
             ?.player_id,
+          team: player.team,
           run: player.run,
           strikerate: player.strikerate,
           wicket: player.wicket,
